@@ -11,6 +11,16 @@ rewrites: async () => [
     destination: "/pages/api/myguy.js",
   },
 ],
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: '/public/index1.html',
+        destination: '/pages/api/myguy.js',
+      },
+    ]
+  },
+}
 module.exports = withContentlayer(nextConfig);
 
 
