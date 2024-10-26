@@ -1,8 +1,9 @@
 'use client';
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from 'three';
 import { Sky, OrbitControls,useFBX, useGLTF, useAnimations } from "@react-three/drei";
 import { useLoader } from '@react-three/fiber';
+import { useEffect } from 'react';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -79,7 +80,6 @@ return(
 </mesh>
 )
 }
-
 export default function AppSidebar({
   children
 }: {
@@ -88,6 +88,39 @@ export default function AppSidebar({
   const [mounted, setMounted] = React.useState(false);
   const { data: session } = useSession();
   const pathname = usePathname();
+
+  function CameraLogger() {
+    const { camera } = useThree();
+  
+    useEffect(() => {
+      const logCameraPosition = () => {
+        console.log(`Camera position: x=${camera.position.x}, y=${camera.position.y}, z=${camera.position.z} 
+                     Camera rotation: x=${camera.rotation.x}, y=${camera.rotation.y}, z=${camera.rotation.z}`);
+      };
+  
+      // Attach the event listener to log position on camera change
+      camera.addEventListener('change', logCameraPosition);
+  
+      // Clean up the event listener when the component unmounts
+      return () => {
+        camera.removeEventListener('change', logCameraPosition);
+      };
+    }, [camera]);
+  
+    return null;
+  }
+
+  function CameraController() {
+    const { camera } = useThree();
+  
+    useEffect(() => {
+      camera.position.set(0.16332544732505383, 16.01148100664497, 4.5730658543586795 ); // Set the desired position dynamically
+      camera.lookAt(0, 0, 0);
+      camera.rotation.set(-0.001385897104596599, -0.07011904221369014, -0.0000970982270085086);       // Make the camera look at the origin (or another point)
+    }, [camera]);
+  
+    return null;
+  }
   // Only render after first client-side mount
   React.useEffect(() => {
     setMounted(true);
@@ -101,13 +134,24 @@ export default function AppSidebar({
     <SidebarProvider>
       <Sidebar collapsible="icon">
         <SidebarHeader>
-        <Canvas camera={{ position: [0, 2, 10] }}>
-  <OrbitControls />
+        <Canvas>
+        <OrbitControls
+        onChange={(e) => {
+          const { x, y, z } = e.target.object.position;
+          const { x: rotX, y: rotY, z: rotZ } = e.target.object.rotation;
+           
+          
+          console.log(`Camera moved to: x=${x}, y=${y}, z=${z} 
+            Camera rotation: x=${rotX}, y=${rotY}, z=${rotZ}`);
+}}
+      />
   <ambientLight intensity={0.5} />
   <Sky sunPosition={[100, 100, 20]} />
   <Box position={[-1.2, 0, 0]} />
   <Box position={[1.2, 0, 0]} />
   <FBXModel url="/1c.fbx" /> {/* Load your FBX model here */}
+  <CameraLogger />
+  <CameraController />
 </Canvas>
           <div  style={{ display: 'none' }} className="flex gap-2 py-2 text-sidebar-accent-foreground ">
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
