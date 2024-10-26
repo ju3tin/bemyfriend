@@ -1,6 +1,10 @@
 'use client';
 import { Canvas } from "@react-three/fiber";
+import * as THREE from 'three';
 import { Sky, OrbitControls } from "@react-three/drei";
+import { useLoader } from '@react-three/fiber';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Collapsible,
@@ -61,6 +65,12 @@ export const company = {
   plan: 'Enterprise'
 };
 
+// New component to load FBX
+function FBXModel({ url }: { url: string }) {
+  const fbx = useLoader(FBXLoader, url);
+  return <primitive object={fbx} />;
+}
+
 function Box(props: any){
 return(
 <mesh {...props}>
@@ -92,11 +102,12 @@ export default function AppSidebar({
       <Sidebar collapsible="icon">
         <SidebarHeader>
         <Canvas>
-<OrbitControls></OrbitControls>
-<ambientLight intensity={0.5}></ambientLight>
-<Sky sunPosition={[100,100,20]}></Sky>
-<Box position={[-1.2, 0, 0]}></Box>
-<Box position={[1.2, 0, 0]}></Box>
+  <OrbitControls />
+  <ambientLight intensity={0.5} />
+  <Sky sunPosition={[100, 100, 20]} />
+  <Box position={[-1.2, 0, 0]} />
+  <Box position={[1.2, 0, 0]} />
+  <FBXModel url="/1c.fbx" /> {/* Load your FBX model here */}
 </Canvas>
           <div  style={{ display: 'none' }} className="flex gap-2 py-2 text-sidebar-accent-foreground ">
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
