@@ -11,6 +11,12 @@ const BookingForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
+
+  function handleTimeChange(value: string | null) {
+    if (value !== null) {
+      setTime(value);
+    }
+  }
   // Function to generate a random 5-character session ID
   const generateSessionId = (): string => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -62,9 +68,9 @@ const BookingForm = () => {
       <div>
         <label>Booking Time:</label>
         <TimePicker
-          onChange={setTime}
-          value={time}
-          required
+         onChange={handleTimeChange}
+         value={time}
+         required
         />
       </div>
       <button type="submit">Book Now</button>
