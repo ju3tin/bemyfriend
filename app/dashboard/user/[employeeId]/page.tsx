@@ -5,8 +5,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import TimePicker from 'react-time-picker';
 
 const BookingForm = () => {
+  type Value = string | null;
   const [startDate, setStartDate] = useState<Date | null>(null);
-  const [time, setTime] = useState<string>('10:00'); // Default time
+  const [time, setTime] = useState('10:00'); // Default time
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
