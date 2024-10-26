@@ -1,36 +1,20 @@
-const { withContentlayer } = require("next-contentlayer");
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'utfs.io',
+        port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.slingacademy.com',
+        port: ''
+      }
+    ]
+  },
+  transpilePackages: ['geist']
 };
-rewrites: async () => [
-  {
-    source: "/public/myfile.html",
-    destination: "/pages/api/myguy.js",
-  },
-],
-module.exports = {
-  async redirects() {
-    return [
-      {
-        source: '/public/index1.html',
-        destination: '/pages/api/myguy.js',
-      },
-    ]
-  },
-}
-module.exports = {
-  async redirects() {
-    return [
-      {
-        source: '/public/index12.html',
-        destination: '/pages/api/myguy.js',
-      },
-    ]
-  },
-}
-module.exports = withContentlayer(nextConfig);
 
-
+module.exports = nextConfig;
