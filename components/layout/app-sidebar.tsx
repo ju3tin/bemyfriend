@@ -3,7 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import * as THREE from 'three';
 import { Sky, OrbitControls } from "@react-three/drei";
 import { useLoader } from '@react-three/fiber';
-import { FBXLoader } from 'three-fbx-loader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
