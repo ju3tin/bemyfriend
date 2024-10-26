@@ -1,7 +1,7 @@
 'use client';
 import { Canvas } from "@react-three/fiber";
 import * as THREE from 'three';
-import { Sky, OrbitControls } from "@react-three/drei";
+import { Sky, OrbitControls,useFBX, useGLTF, useAnimations } from "@react-three/drei";
 import { useLoader } from '@react-three/fiber';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
@@ -67,8 +67,8 @@ export const company = {
 
 // New component to load FBX
 function FBXModel({ url }: { url: string }) {
-  const fbx = useLoader(FBXLoader, url);
-  return <primitive object={fbx} />;
+  const fbx2 = useFBX("/1c.fbx");
+  return <primitive object={fbx2} />;
 }
 
 function Box(props: any){
