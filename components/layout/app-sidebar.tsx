@@ -61,7 +61,7 @@ export const company = {
   plan: 'Enterprise'
 };
 
-function Box(props){
+function Box(props: any){
 return(
 <mesh {...props}>
 <boxGeometry args={[1, 1, 1]}/>
