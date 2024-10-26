@@ -136,10 +136,10 @@ export default function AppSidebar({
         <SidebarHeader>
         <Canvas>
         <OrbitControls
-        onChange={(e) => {
-          const { x, y, z } = e.target.object.position;
-          const { x: rotX, y: rotY, z: rotZ } = e.target.object.rotation;
-           
+               onChange={(e) => {
+                if (!e) return; // Check if 'e' is defined
+                const { x, y, z } = e.target.object.position;
+                const { x: rotX, y: rotY, z: rotZ } = e.target.object.rotation;
           
           console.log(`Camera moved to: x=${x}, y=${y}, z=${z} 
             Camera rotation: x=${rotX}, y=${rotY}, z=${rotZ}`);
