@@ -82,7 +82,6 @@
     "tailwindcss": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.169.0",
-    "three-fbx-loader": "^1.0.3",
     "threejs-fbxloader": "^0.0.1",
     "typescript": "5.2.2",
     "uuid": "^9.0.1",
@@ -97,6 +96,7 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "prettier": "3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.14"
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "three-fbx-loader": "^1.0.3"
   }
 }
