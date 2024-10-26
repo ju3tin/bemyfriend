@@ -99,11 +99,11 @@ export default function AppSidebar({
       };
   
       // Attach the event listener to log position on camera change
-      camera.addEventListener('change', logCameraPosition);
+    //  camera.addEventListener('change', logCameraPosition);
   
       // Clean up the event listener when the component unmounts
       return () => {
-        camera.removeEventListener('change', logCameraPosition);
+    //    camera.removeEventListener('change', logCameraPosition);
       };
     }, [camera]);
   
