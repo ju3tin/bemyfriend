@@ -1,4 +1,6 @@
 'use client';
+import { Canvas } from "@react-three/fiber";
+import { Sky, OrbitControls } from "@react-three/drei";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Collapsible,
@@ -59,6 +61,15 @@ export const company = {
   plan: 'Enterprise'
 };
 
+function Box(props){
+return(
+<mesh {...props}>
+<boxGeometry args={[1, 1, 1]}/>
+<meshLambertMaterial attach="material" color="hotpink"/>
+</mesh>
+)
+}
+
 export default function AppSidebar({
   children
 }: {
@@ -80,9 +91,16 @@ export default function AppSidebar({
     <SidebarProvider>
       <Sidebar collapsible="icon">
         <SidebarHeader>
-          <div className="flex gap-2 py-2 text-sidebar-accent-foreground ">
+        <Canvas>
+<OrbitControls></OrbitControls>
+<ambientLight intensity={0.5}></ambientLight>
+<Sky sunPosition={[100,100,20]}></Sky>
+<Box position={[-1.2, 0, 0]}></Box>
+<Box position={[1.2, 0, 0]}></Box>
+</Canvas>
+          <div  style={{ display: 'none' }} className="flex gap-2 py-2 text-sidebar-accent-foreground ">
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <company.logo className="size-4" />
+             <company.logo className="size-4" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-semibold">{company.name}</span>
