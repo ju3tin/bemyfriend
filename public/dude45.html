@@ -1823,6 +1823,9 @@ function connected(session) {
     PUBNUB.$('number').value = ''+session.number;
     sounds.play('sound/hi');
     console.log("Hi!");
+    if (session.connected) {
+        alert("Session is connected!");
+    }
 }
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
