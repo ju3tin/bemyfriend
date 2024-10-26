@@ -68,7 +68,7 @@ export const company = {
 // New component to load FBX
 function FBXModel({ url }: { url: string }) {
   const fbx2 = useFBX("/1c.fbx");
-  return <primitive object={fbx2} />;
+  return <primitive object={fbx2} scale={0.1} />;
 }
 
 function Box(props: any){
@@ -101,7 +101,7 @@ export default function AppSidebar({
     <SidebarProvider>
       <Sidebar collapsible="icon">
         <SidebarHeader>
-        <Canvas>
+        <Canvas camera={{ position: [0, 2, 10] }}>
   <OrbitControls />
   <ambientLight intensity={0.5} />
   <Sky sunPosition={[100, 100, 20]} />
