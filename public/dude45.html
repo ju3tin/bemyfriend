@@ -1429,6 +1429,9 @@ hr {
     </style>
 
     <script>
+
+
+
         const counter2 = 0;
 
 
@@ -1625,6 +1628,50 @@ function openNav() {
   </header>
 
   <div class="container">
+    <div class="form-container">
+<script>
+if (player === player1) {
+    // Handle the case when player is player1
+    var element = document.getElementById("bet1");
+    if (element) {
+        element.style.display = "block"; // Change display to block
+    }
+} else {
+    // Handle the case when player is not player1
+    showForm2();
+}
+
+
+</script>
+
+        <h2>Place Your Bet</h2>
+        <form style="display: none;" id="yesno">
+          <button>yes</button><button>no</button>  
+        </form>
+        <form style="display: none;" id="bet1" action="/submit-bet" method="post">
+            <!-- Bet Amount Slider -->
+            <label for="betAmount">Bet Amount (£):</label>
+            <div class="slider-container">
+                <input type="range" id="betAmount" name="betAmount" min="1" max="200" value="1" oninput="updateBetAmount(this.value)">
+                <span class="slider-output" id="betAmountOutput">£1</span>
+            </div>
+    
+            <!-- Additional Fields -->
+            <label for="username">Your Name:</label>
+            <input type="text" id="username" name="username" required>
+    
+            <label for="gameChoice">Game Choice:</label>
+            <select id="gameChoice" name="gameChoice" required>
+                <option value="roulette">Roulette</option>
+                <option value="blackjack">Blackjack</option>
+                <option value="poker">Poker</option>
+                <option value="slots">Slots</option>
+            </select>
+    
+            <!-- Submit Button -->
+            <button type="submit">Place Bet</button>
+        </form>
+    </div>
     <div class="row">
 
         <!-- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
@@ -1743,8 +1790,9 @@ function openNav() {
 <script src="js/webrtc.js"></script>
 <script src="js/sound.js"></script>
 <script>
-var value1 = 0;
 
+var value1 = 0;
+let player;
 var value2 = 12;
 
 (function(value1){
@@ -1826,7 +1874,19 @@ function connected(session) {
     if (session.connected) {
        // alert("Session is connected!");
         timer3();closeNav();
+
+       
+if (call == null || call.length < 1) {
+    player = player1;
+} else {
+    player = player2;
+}
+// ... existing code ...
+
+// ... existing code ...
     }
+
+   
 }
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -1916,6 +1976,27 @@ phone.ready(function(){
         var number = urlargs['call'];
         PUBNUB.$('number').value = number;
         dial(number);
+        
+        var player = "player2";
+console.log("you are player 2")
+var element1 = document.getElementById("yesno");
+    if (element1) {
+        element1.style.display = "block"; // Change display to block
+        element1.style.display = "block"; // Change display to block
+        element1.style.position = "fixed"; // Position fixed to center it
+        element1.style.top = "50%"; // Center vertically
+        element1.style.left = "50%"; // Center horizontally
+        element1.style.transform = "translate(-50%, -50%)"; // Adjust for element size
+        element1.style.zIndex = "1000"; // Set z-index to 1000
+   
+    }
+    }else{
+        var player = "player1";
+        console.log("you are player 1")
+        var element = document.getElementById("bet1");
+    if (element) {
+        element.style.display = "block"; // Change display to block
+    }
     }
 
     // Make a Phone Call
