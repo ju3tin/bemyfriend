@@ -866,7 +866,17 @@ td,th {
 .glyphicon-chevron-up:before {
     content: "\e113"
 }
-
+.overlay-content {
+    position: relative;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
+h1 {
+    margin: .67em 0;
+    font-size: 2em;
+}
 .glyphicon-chevron-down:before {
     content: "\e114"
 }
@@ -1648,7 +1658,7 @@ if (player === player1) {
         <form style="display: none;" id="yesno">
           <button>yes</button><button>no</button>  
         </form>
-        <form style="display: none;" id="bet1" action="/submit-bet" method="post">
+        <div style="display: none;" id="bet1">
             <!-- Bet Amount Slider -->
             <label for="betAmount">Bet Amount (£):</label>
             <div class="slider-container">
@@ -1661,16 +1671,11 @@ if (player === player1) {
             <input type="text" id="username" name="username" required>
     
             <label for="gameChoice">Game Choice:</label>
-            <select id="gameChoice" name="gameChoice" required>
-                <option value="roulette">Roulette</option>
-                <option value="blackjack">Blackjack</option>
-                <option value="poker">Poker</option>
-                <option value="slots">Slots</option>
-            </select>
+         
     
             <!-- Submit Button -->
-            <button type="submit">Place Bet</button>
-        </form>
+            <button onclick="sendMessage()" id="button1" type="submit">Place Bet</button>
+        </div>
     </div>
     <div class="row">
 
@@ -1790,7 +1795,7 @@ if (player === player1) {
 <script src="js/webrtc.js"></script>
 <script src="js/sound.js"></script>
 <script>
-
+ var button45 = document.getElementById("button1");
 var value1 = 0;
 let player;
 var value2 = 12;
@@ -1845,13 +1850,13 @@ function urlstring(params) {
         params, function( key, val) { return key + '=' + val }
     ).join('&');
 }
-
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // Calling & Answering Service
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 var video_out = PUBNUB.$('video-display');
 var img_out   = PUBNUB.$('video-thumbnail');
 var img_self  = PUBNUB.$('video-self');
+
 
 var phone     = window.phone = PHONE({
     number        : my_number.number // listen on this line
@@ -1996,9 +2001,36 @@ var element1 = document.getElementById("yesno");
         var element = document.getElementById("bet1");
     if (element) {
         element.style.display = "block"; // Change display to block
-    }
-    }
+        element.style.position = "fixed"; // Position fixed to center it
+        element.style.top = "50%"; // Center vertically
+        element.style.left = "50%"; // Center horizontally
+        element.style.transform = "translate(-50%, -50%)"; // Adjust for element size
+        element.style.zIndex = "1000"; // Set z-index to 1000
 
+        // Create button1
+        var button1 = document.createElement("button");
+        button1.innerText = "Send Message";
+        button1.onclick = function() {
+            sendMessage(); // Call function to send message via PubNub
+        };
+        element.appendChild(button1); // Append button to the form
+    }
+  
+    }
+    function sendMessage1() {
+   
+    // Send the message via PubNub
+    pubnub.publish({
+        channel: 'your_channel_name', // Replace with your channel name
+        message: message,
+        callback: function(response) {
+            console.log("Message sent successfully:", response);
+        },
+        error: function(error) {
+            console.error("Error sending message:", error);
+        }
+    });
+}
     // Make a Phone Call
     PUBNUB.bind( 'mousedown,touchstart', PUBNUB.$('dial'), function(){
         var number = PUBNUB.$('number').value;
@@ -2117,6 +2149,8 @@ phone.debug(function(details){
 
 <script>
   // Our input frames will come from here.
+ 
+ 
   const videoElement = document.getElementsByClassName('input_video')[0];
   const canvasElement = document.getElementsByClassName('output_canvas')[0];
   const controlsElement = document.getElementsByClassName('control-panel')[0];
@@ -2310,6 +2344,73 @@ function countdown(counter, results, value1) {
 
 }
 
+
+var button45 = document.getElementById("button1");
+button45.onclick = function() {
+        sendMessage(); // Call function to send message via PubNub
+        console.log("why the shit")
+
+    };
+
+
+
+
+function sendMessage() {
+console.log("guck you")
+
+pubnub.publish({
+  channel: "my_channel",
+  message: {
+    text: "This is a message sent from pubnub.com"
+  }
+})
+
+phone.send({ text : 'fuck off' });
+pubnub.addListener({
+    status: (s) => {console.log('Status', s.category) }
+});
+
+// add message and presence listeners
+subscription.addListener({
+    // Messages
+    message: (m) => { console.log('Received message', m) },
+    // Presence
+    presence: (p) => { console.log('Presence event', p) },
+});
+
+    /*pubnub.publish({
+  message: 'Hello World!',
+  channel: 'ch-1',
+        callback: function(response) {
+            console.log("Message sent successfully:", response);
+        },
+        error: function(error) {
+            console.error("Error sending message:", error);
+        }
+}, (status, response) => {
+  // handle status, response
+});
+
+    var message = {
+        // Collect your form data here
+     //   inputValue: document.getElementById("inputField").value // Example input field
+    };
+
+    // Send the message via PubNub
+    pubnub.publish({
+        channel: 'your_channel_name', // Replace with your channel name
+        message: ' sdf sdfsdf',
+        callback: function(response) {
+            console.log("Message sent successfully:", response);
+        },
+        error: function(error) {
+            console.error("Error sending message:", error);
+        }
+    });
+}
+
+*/
+}
   </script>
   
 
