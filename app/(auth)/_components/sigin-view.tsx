@@ -3,6 +3,7 @@ import Link from 'next/link';
 import UserAuthForm from './user-auth-form';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import styles from '../../../FullBackgroundVideo.module.css';
 
 export const metadata: Metadata = {
   title: 'Authentication',
@@ -23,6 +24,16 @@ export default function SignInViewPage() {
       </Link>
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
         <div className="absolute inset-0 bg-zinc-900" />
+        <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className={styles.videoBackground}
+      >
+        <source src="/media/123.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
         <div className="relative z-20 flex items-center text-lg font-medium">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +64,12 @@ export default function SignInViewPage() {
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
+            <Link
+              href="/privacy"
+              className="underline underline-offset-4 hover:text-primary"
+            >
               Create an account
+              </Link>
             </h1>
             <p className="text-sm text-muted-foreground">
               Enter your email below to create your account
