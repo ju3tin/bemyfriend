@@ -35,7 +35,7 @@ export default function SignInViewPage() {
         Your browser does not support the video tag.
       </video>
         <div className="relative z-20 flex items-center text-lg font-medium">
-        <img style={{ width: '35px' }} src="/images/logo.png" alt="Chat Image" /> 
+        <img style={{ width: '40px' }} src="/images/logo.png" alt="Chat Image" /> 
         </div>
         <div className="relative z-20 flex items-center text-lg font-medium">
         Be My Friend
