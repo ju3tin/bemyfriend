@@ -130,25 +130,58 @@ export const navItems: NavItem[] = [
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
-    title: 'Therapists',
-    url: '/dashboard/employee',
-    icon: 'user',
-    isActive: false,
-    items: [] // No child items
-  },
-  {
-    title: 'Product',
+    title: 'Shop',
     url: '/dashboard/product',
     icon: 'product',
     isActive: false,
     items: [] // No child items
   },
   {
-    title: 'Account',
+    title: 'Mind',
     url: '#', // Placeholder as there is no direct link for the parent
     icon: 'billing',
     isActive: true,
 
+    items: [
+     
+  {
+    title: 'Therapists',
+    url: '/dashboard/employee',
+    icon: 'user',
+    isActive: false
+  },
+      {
+        title: 'Login',
+        url: '/',
+        icon: 'login'
+      }
+    ]
+  },
+  {
+    title: 'Body',
+    url: '#', // Placeholder as there is no direct link for the parent
+    icon: 'billing',
+    isActive: true,
+
+    items: [
+      {
+        title: 'Profile',
+        url: '/dashboard/profile',
+        icon: 'userPen'
+      },
+      {
+        title: 'Login',
+        url: '/',
+        icon: 'login'
+      }
+    ]
+  },
+
+  {
+    title: 'Soul',
+    url: '#', // Placeholder as there is no direct link for the parent
+    icon: 'billing',
+    isActive: true,
     items: [
       {
         title: 'Profile',
@@ -170,3 +203,4 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   }
 ];
+ 
