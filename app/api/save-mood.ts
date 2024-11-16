@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
-import { MoodEntry } from "../ types";
+import { MoodEntry } from "../../app/types";
 
 // Path to JSON file
 const filePath = path.join(process.cwd(), "data", "moods.json");

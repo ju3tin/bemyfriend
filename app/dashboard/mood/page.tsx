@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import MoodHistory from "../../../components/mood";
 import Link from "next/link";
-import { MoodEntry } from "../../../ types";
+import { MoodEntry } from "../../../app/types";
 
 export default function Home() {
   const [moodData, setMoodData] = useState<MoodEntry[]>([]);
