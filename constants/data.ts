@@ -150,6 +150,12 @@ export const navItems: NavItem[] = [
     icon: 'user',
     isActive: false
   },
+  {
+    title: 'Games',
+    url: '/dashboard/mindgames',
+    icon: 'user',
+    isActive: false
+  },
       {
         title: 'Login',
         url: '/',
