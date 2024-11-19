@@ -889,6 +889,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.0/examples/jsm/loaders/GLTFLoader.js';
+
+
 
 THREE.ColorManagement.enabled = true;
 
@@ -965,6 +968,21 @@ dirLight.shadow.camera.bottom = - 100;
 dirLight.shadow.camera.left = - 120;
 dirLight.shadow.camera.right = 120;
 scene.add( dirLight );
+
+// Import the GLTFLoader
+
+// Create a new instance of the GLTFLoader
+const loader5 = new GLTFLoader();
+    loader5.load('girl.glb', function (gltf) {
+        console.log('GLB model loaded:', gltf);
+        scene.add(gltf.scene);
+    });
+
+    camera.position.z = 5;
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
 /*
 const light = new THREE.PointLight( 0xffffff, 400 );
 light.position.set( 0, 200, 0 );
@@ -985,13 +1003,13 @@ scene.add(light2);
 
 // ground
 const textureLoader = new THREE.TextureLoader();
-const basecolor = textureLoader.load('/assets/glb/textures/baseColor.jpg');
-const basecolor1 = textureLoader.load('/assets/glb/textures/baseColor001.jpg');
-const basecolor2 = textureLoader.load('/assets/glb/textures/baseColor002.jpg');
-const basecolor3 = textureLoader.load('/assets/glb/textures/baseColor003.jpg');
-const hair = textureLoader.load('/assets/glb/textures/hair-53-N.jpg');
-const glasses = textureLoader.load('/assets/glb/textures/glasses-02-D.png');
-const teeth = textureLoader.load('/assets/glb/textures/Wolf3D_Teeth.jpg');
+const basecolor = textureLoader.load('http://localhost:3000/assets/glb/textures/baseColor.jpg');
+const basecolor1 = textureLoader.load('http://localhost:3000/assets/glb/textures/baseColor001.jpg');
+const basecolor2 = textureLoader.load('http://localhost:3000/assets/glb/textures/baseColor002.jpg');
+const basecolor3 = textureLoader.load('http://localhost:3000/assets/glb/textures/baseColor003.jpg');
+const hair = textureLoader.load('http://localhost:3000/assets/glb/textures/hair-53-N.jpg');
+const glasses = textureLoader.load('http://localhost:3000/assets/glb/textures/glasses-02-D.png');
+const teeth = textureLoader.load('http://localhost:3000/assets/glb/textures/Wolf3D_Teeth.jpg');
 	/*
 
 var skirt = textureLoader.load('/assets/glb/textures/skirt.png');
@@ -1053,8 +1071,33 @@ scene.add( grid );
 
 const loader = new FBXLoader( manager );
 //loader.load( '/assets/glb/dude45d.fbx', function ( object ) {
+    const loader1 = new GLTFLoader();
 
-loader.load( '/avatars/girl.fbx', function ( object ) {
+// Load the GLB model
+loader1.load('girl.glb', function (gltf) {
+    console.log('GLB model loaded:', gltf);
+
+    // Check if the model has meshes
+    gltf.scene.traverse(function (child) {
+        if (child.isMesh) {
+            console.log('Mesh found:', child);
+            console.log('Material:', child.material);
+            // Check if the material has a map (texture)
+            if (child.material.map) {
+                console.log('Texture map found:', child.material.map);
+            } else {
+                console.warn('No texture map found for this mesh.');
+            }
+        }
+    });
+
+    // Add the loaded model to the scene
+    scene.add(gltf.scene);
+    mixer = new THREE.AnimationMixer(gltf.scene);
+});
+
+
+loader.load( 'girl.fbx', function ( object ) {
 mixer = new THREE.AnimationMixer( object );
 /*
 const clips = object.animations;
@@ -1681,9 +1724,17 @@ function createDownloadLink(blob) {
       let userHtml = '<div class="d-flex justify-content-end mb-4">'+'<div class="msg_cotainer_send">'+text99.transcript+'</div>'+image1+'</div>';
       document.querySelector('#body').innerHTML+= userHtml;
 	  let xhr = new XMLHttpRequest();
-      xhr.open(`GET`, `https://apps.emersa.io:8082/test123/${text99.transcript}`);
+      xhr.open(`POST`, `https://api1-c73l.onrender.com/chat`);
       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.send(`messageValue=${text99.transcript}`);
+      var data = JSON.stringify({
+  "messages": [
+    `{
+      "role": "user",
+      "content": "${text99.transcript}"
+    }`
+  ]
+});
+      xhr.send(data);
 	  xhr.onload = function () {
 		var obj = JSON.parse(this.responseText);
 		console.log(JSON.stringify(obj.traits));
@@ -1692,7 +1743,7 @@ function createDownloadLink(blob) {
 		if (objlength.length < 3) {
 		var objecttext = "I'm sorry, but I didn't understand the question. Please try again";
 		console.log(objecttext+'dfgdfgdfgdfgdgdgdgdgf'); 
-		}else { var objecttext = obj.traits.text[0].value};
+		}else { var objecttext = obj["choices"][0]["message"]["content"]};
 		let botHtml = '<div class="d-flex justify-content-start mb-4">'+'<div class="img_cont_msg">'+image2a+'</div>'+'<div class="msg_cotainer">'+objecttext+'</div>'+'</div>'
 		document.querySelector('#body').innerHTML+= botHtml;
 		const listener = new THREE.AudioListener();
@@ -1759,22 +1810,30 @@ const image1 = `<div class="img_cont_msg">
             </div>`;
 let xhr = new XMLHttpRequest();
 var userMessage = document.querySelector("#userInput").value;
+var data = JSON.stringify({
+  "messages": [
+    {
+      "role": "user",
+      "content": userMessage
+    }
+  ]
+});
 let userHtml = '<div class="d-flex justify-content-end mb-4">'+'<div class="msg_cotainer_send">'+userMessage+'</div>'+image1+'</div>'
 document.querySelector('#body').innerHTML+= userHtml;
-xhr.open(`GET`, `https://nodeapi-neon.vercel.app/q1/${userMessage}`);
-xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xhr.send(`messageValue=${userMessage}`);
+xhr.open("POST", "https://api1-c73l.onrender.com/chat");
+xhr.setRequestHeader("Content-Type", "application/json");
+xhr.send(data);
 xhr.onload = function () {
 var obj = JSON.parse(this.responseText);
 console.log(JSON.stringify(obj));
-console.log(JSON.stringify(obj.traits.text[0].value));
+console.log(JSON.stringify(obj["choices"][0]["message"]["content"]));
 //console.log(JSON.stringify(obj.traits));
-var objlength = JSON.stringify(obj.traits.text[0].value);
-var obj1q = JSON.stringify(obj.traits.text[0].value);
+var objlength = JSON.stringify(obj["choices"][0]["message"]["content"]);
+var obj1q = JSON.stringify(obj["choices"][0]["message"]["content"]);
 if (objlength.length < 3) {
-var objecttext = "I'm sorry, but I didn't understand the question. Please try again";
+var objecttext = "I'm sorry, but I didn't understand the question. Please try again";   
 console.log(objecttext+'dfgdfgdfgdfgdgdgdgdgf'); 
-}else { var objecttext = obj.traits.text[0].value};
+}else { var objecttext = obj["choices"][0]["message"]["content"]};
 let botHtml = '<div class="d-flex justify-content-start mb-4">'+'<div class="img_cont_msg">'+image2a+'</div>'+'<div class="msg_cotainer">'+objecttext+'</div>'+'</div>'
 document.querySelector('#body').innerHTML+= botHtml;
 const listener = new THREE.AudioListener();

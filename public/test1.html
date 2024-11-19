@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Export Scene Example</title>
+    <script type="module">
+        // Import Three.js and GLTFExporter from a CDN
+        import * as THREE from 'three';
+
+
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js';
+        import { GLTFExporter } from 'https://cdn.jsdelivr.net/npm/three@0.152.0/examples/jsm/exporters/GLTFExporter.js';
+
+        let scene, camera, renderer;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Add a simple cube to the scene
+            const geometry = new THREE.BoxGeometry();
+            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+
+            camera.position.z = 5;
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        function exportScene() {
+            const exporter = new GLTFExporter();
+
+            exporter.parse(scene, function (result) {
+                const blob = new Blob([result], { type: 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'girl.glb';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }, { binary: true });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            const exportButton = document.createElement('button');
+            exportButton.innerText = 'Export Scene';
+            exportButton.addEventListener('click', exportScene);
+            document.body.appendChild(exportButton);
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
