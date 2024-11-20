@@ -1,50 +1,50 @@
 
 <!doctype html>
 <html lang="en" class="h-100" data-bs-theme="auto">
-  <head><script src="/assets/js/color-modes.js"></script>
-   <meta charset="utf-8">
+<head>
+    <script src="/assets/js/color-modes.js"></script>
+    <meta charset="utf-8">
     <link rel="icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="./css/control_utils.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/12.3.0/stellar-sdk.js"></script>
     <script src="./javascript/camera_utils.js"></script>
     <script src="./javascript/control_utils.js"></script>
     <script src="./javascript/drawing_utils.js"></script>
-     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="./javascript/pose.js"></script>
+    <script src="./javascript/stellar.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:locale" content="" />
-<meta property="og:type" content="article" />
-<meta property="og:title" content="Fitclash" />
-<meta property="og:description" content="Fitclash, Gamification for Fitness" />
-<meta property="og:url" content="/" />
-<meta property="og:site_name" content="Fitclash" />
-<meta property="article:section" content="Uncategorised" />
-<meta property="article:published_time" content="" />
-<meta property="article:modified_time" content="" />
-<meta property="og:updated_time" content="" />
-<meta property="og:image" content="/assets/img/bg-office1.jpg" />
-<meta property="og:image:secure_url" content="/assets/img/bg-office1.jpg" />
-<meta property="og:image:width" content="1280" />
-<meta property="og:image:height" content="800" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:description" content="Fitclash, Gamification for Fitness" />
-<meta name="twitter:title" content="Fitclash" />
-<meta name="twitter:image" content="/assets/img/bg-office1.jpg" />
-<meta property="og:image" content="/img/tinyauthor1.jpg" />
-<meta property="og:image:type" content="image/jpg" />
-<meta property="og:image:width" content="400" />
-<meta property="og:image:height" content="400" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Fitclash" />
+    <meta property="og:description" content="Fitclash, Gamification for Fitness" />
+    <meta property="og:url" content="/" />
+    <meta property="og:site_name" content="Fitclash" />
+    <meta property="article:section" content="Uncategorised" />
+    <meta property="article:published_time" content="" />
+    <meta property="article:modified_time" content="" />
+    <meta property="og:updated_time" content="" />
+    <meta property="og:image" content="/assets/img/bg-office1.jpg" />
+    <meta property="og:image:secure_url" content="/assets/img/bg-office1.jpg" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="800" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:description" content="Fitclash, Gamification for Fitness" />
+    <meta name="twitter:title" content="Fitclash" />
+    <meta name="twitter:image" content="/assets/img/bg-office1.jpg" />
+    <meta property="og:image" content="/img/tinyauthor1.jpg" />
+    <meta property="og:image:type" content="image/jpg" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
     <title>Fitclash</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <link href="css/styles1.css" rel="stylesheet" type="text/css">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/cover/">
-
-    
-  <link href="css/styles1.css" rel="stylesheet" type="text/css">
+    <link href="css/styles1.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
-
-<link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
 
@@ -1476,6 +1476,78 @@ function openNav() {
             window.open("https://phantom.app/", "_blank");
         }
 
+        const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+        const rpcUrl = "https://soroban-testnet.stellar.org:443"
+
+        async function callSorobanContract(contractId, functionName, params) {
+            console.log("[wage] Calling Soroban contract function", { contractId, functionName, params });
+            try {
+                const response = await axios.post(`${rpcUrl}/simulateTransaction`, {
+                    contractId: contractId,
+                    functionName: functionName,
+                    params: params // Define parameters as needed by your function
+                });
+                console.log("[wage] Contract function response:", response.data);
+            } catch (error) {
+                console.error("[wage] Error calling Soroban contract function:", error);
+            }
+        }
+
+        async function invokeContractFunction(publicKey, secretKey, contractId, functionName, parameters) {
+            console.log("[wage] Invoking contract function", { publicKey, secretKey, contractId, functionName, parameters });
+            const keypair = StellarSdk.Keypair.fromSecret(secretKey);
+            const account = await server.loadAccount(publicKey);
+
+            const transaction = new StellarSdk.TransactionBuilder(account, {
+                fee: StellarSdk.BASE_FEE,
+                networkPassphrase: StellarSdk.Networks.TESTNET,
+            })
+                .addOperation(StellarSdk.Operation.invokeHostFunction({
+                    contractId: contractId,
+                    functionName: functionName,
+                    functionParameters: parameters
+                }))
+                .setTimeout(30)
+                .build();
+
+                transaction.sign(keypair);
+            
+            try {
+                const response = await server.submitTransaction(transaction);
+                console.log("[wage] Transaction successful:", response);
+            } catch (error) {
+                console.error("[wage] Transaction failed:", error.response.data);
+            }
+        }
+
+        document
+            .getElementById('wage-btn')
+            .addEventListener('click', async function(e) {
+                // e.preventDefault();
+                console.log("[wage] Button clicked");
+                const wage = document.getElementById('wage-input').value;
+                const wagePk = document.getElementById('wage-input-pk').value;
+                const wageSk = document.getElementById('wage-input-sk').value;
+
+                try {
+                    const r = await invokeContractFunction(
+                        wagePk,
+                        wageSk,
+                        'CD53ZUEATUBUAF4KV23MTRDMHGCCRXE7XUAND3CGCUPGWC7UDF3SF5ZN',
+                        'deposit',
+                        [
+                            "game_id",
+                            wagePk,
+                            StellarSdk.Asset.native(),
+                            1000000,
+                        ]
+                    );
+                    console.log(r);
+                } catch (error) {
+                    console.error(error);
+                }
+            });
+
         // Update wallet status on the frontend
         function updateWalletStatus() {
             if (walletAddress) {
@@ -1578,8 +1650,16 @@ function openNav() {
     <a href="#">Clients</a>
     <a href="#">Contact</a>-->
    <h1> Waiting for Player</h1>
-       <h1>Login with Google</h1>
-  <button id="connect-button">Connect to Phantom Wallet</button>
+    <h1>Login with Google</h1>
+
+    <div>
+        <input type="number" id="wage-input"  placeholder="Enter your wage" />
+        <input type="text" id="wage-input-pk"  placeholder="Public Key" />
+        <input type="text" id="wage-input-sk"  placeholder="Secret Key" />
+        <button id="wage-btn" style="background-color: red; color: white;" type="button">Make a wage</button>
+    </div>
+
+    <button id="connect-button">Connect to Phantom Wallet</button>
     <p id="wallet-status">Not connected</p>
     <p id="wallet-address"></p>
     <button id="create-user-button" style="display:none;">Create User Account</button>
